@@ -13,6 +13,7 @@ namespace SQLiteCLIENT
         Connection connection { get; set; }
         string[] resultType = { "OK", "ERROR", "FILE" };
         public bool isLoged { get; set; }
+        private Cache.Session Session;
 
         public Package.Response? Login(string user,string password)
         {
@@ -40,7 +41,7 @@ namespace SQLiteCLIENT
             return result;
         }
 
-        public Func<string, Package.Response> NewDb, DelDb, Query,OpenDb;
+        public Func<string, Package.Response> NewDb, DelDb, Query,OpenDb,OpenDb2;
         public Func<Package.Response> GetDBs,CloseDb,GetTables;
 
         public Client(Connection connection)
@@ -49,7 +50,13 @@ namespace SQLiteCLIENT
             NewDb = arg => sendCommand("new", arg);
             DelDb = arg => sendCommand("del", arg);
             Query = arg => sendCommand("exec", arg);
-            OpenDb = arg => sendCommand("open", arg); 
+            //OpenDb = arg => sendCommand("open", arg);
+
+            OpenDb = arg => { 
+                Package.Response result = sendCommand("open", arg);
+                if (result.Result == resultType[0]) Session.DataBase = arg;
+                return result;
+            };
 
             GetTables = () => sendCommand("exec", $"SELECT name FROM sqlite_master WHERE type = 'table'");
             CloseDb = () => sendCommand("close", "");
