@@ -6,3 +6,11 @@ C:\Users\alber\source\repos\ServQLClient\ServQLClient\bin\Debug\netcoreapp3.1\Se
 C:\Users\alber\source\repos\ServQLClient\ServQLClient\bin\Debug\netcoreapp3.1\ServQLClient.pdb
 C:\Users\alber\source\repos\ServQLClient\ServQLClient\obj\Debug\netcoreapp3.1\ServQLClient.dll
 C:\Users\alber\source\repos\ServQLClient\ServQLClient\obj\Debug\netcoreapp3.1\ServQLClient.pdb
+C:\Users\alber\Source\Repos\ServQL Client\ServQLClient\bin\Debug\netcoreapp3.1\ServQLClient.deps.json
+C:\Users\alber\Source\Repos\ServQL Client\ServQLClient\bin\Debug\netcoreapp3.1\ServQLClient.dll
+C:\Users\alber\Source\Repos\ServQL Client\ServQLClient\bin\Debug\netcoreapp3.1\ServQLClient.pdb
+C:\Users\alber\Source\Repos\ServQL Client\ServQLClient\obj\Debug\netcoreapp3.1\ServQLClient.csprojAssemblyReference.cache
+C:\Users\alber\Source\Repos\ServQL Client\ServQLClient\obj\Debug\netcoreapp3.1\ServQLClient.AssemblyInfoInputs.cache
+C:\Users\alber\Source\Repos\ServQL Client\ServQLClient\obj\Debug\netcoreapp3.1\ServQLClient.AssemblyInfo.cs
+C:\Users\alber\Source\Repos\ServQL Client\ServQLClient\obj\Debug\netcoreapp3.1\ServQLClient.dll
+C:\Users\alber\Source\Repos\ServQL Client\ServQLClient\obj\Debug\netcoreapp3.1\ServQLClient.pdb

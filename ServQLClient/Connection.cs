@@ -10,7 +10,7 @@ using System.Net.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
-namespace SQLiteCLIENT
+namespace ServQLClient
 {
     
     public class Connection
@@ -21,7 +21,6 @@ namespace SQLiteCLIENT
         TcpClient client { get; set; }
         public SslStream stream { get; set; }
         public bool isReady = false;
-        public bool isLoged = false;
 
         string version { get; set; }
 
@@ -75,7 +74,6 @@ namespace SQLiteCLIENT
             }
             client.Close();
             isReady = false;
-            isLoged = false;
             version = null;
             stream = null;
 

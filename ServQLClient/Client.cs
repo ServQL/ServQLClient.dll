@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 
-namespace SQLiteCLIENT
+namespace ServQLClient
 {
     public class Client
     {
@@ -14,6 +14,7 @@ namespace SQLiteCLIENT
         string[] resultType = { "OK", "ERROR", "FILE" };
         public bool isLoged { get; set; }
         private Cache.Session Session;
+        public Dictionary<String,DataBase> dataBases;
 
         public Package.Response? Login(string user,string password)
         {
@@ -25,28 +26,25 @@ namespace SQLiteCLIENT
                 connection.Send(JsonSerializer.Serialize(loginPackage));
                 
                 Package.Response response = JsonSerializer.Deserialize<Package.Response>(connection.Recv());
-                if (response.Result == resultType[0]) isLoged = true;
+                if (response.Result == resultType[0])
+                {
+                    isLoged = true;
+                    Session = new Cache.Session(user,"");
+                }
                 return response;
             }
             return null;
         }
 
-        public string[] splitOut(string OutD)
-        {
-            string[] result = OutD.Split(':');
-            if (result.Length <= 1) throw (new Exception("Invalid string"));
-            string[] Message = new string[result.Length - 1];
-            Message = result.Skip(1).ToArray();
-            result = new string[2] { result[0], string.Join(" ",Message) };
-            return result;
-        }
+
 
         public Func<string, Package.Response> NewDb, DelDb, Query,OpenDb,OpenDb2;
-        public Func<Package.Response> GetDBs,CloseDb,GetTables;
+        public Func<Package.Response> GetDBs,GetDBsI,CloseDb,GetTables;
 
         public Client(Connection connection)
         {
             this.connection = connection;
+
             NewDb = arg => sendCommand("new", arg);
             DelDb = arg => sendCommand("del", arg);
             Query = arg => sendCommand("exec", arg);
@@ -59,14 +57,29 @@ namespace SQLiteCLIENT
             };
 
             GetTables = () => sendCommand("exec", $"SELECT name FROM sqlite_master WHERE type = 'table'");
-            CloseDb = () => sendCommand("close", "");
+            CloseDb = () =>
+            {
+                Session.DataBase = null;
+                return sendCommand("close", "");
+            };
             GetDBs = () => sendCommand("list", "");
+            GetDBsI = () =>
+            {
+                Package.Response response = sendCommand("list", "");
+                String[][] data = response.Data;
+                for (int i = 0; i < response.Data.Length ;i++)
+                {
+                    if (response.Data[0][i] == Session.DataBase) data[0][i] = "* " + data[0][i];
+                }
+                return response;
+            };
+
 
         }
         public bool TestCon()
         {
             if (!this.connection.isReady) throw (new Exception("Connection not Ready"));
-            if (!this.connection.isLoged) throw (new Exception("Connection isnt Logged"));
+            if (!this.isLoged) throw (new Exception("Connection isnt Logged"));
             Package.Response response = sendCommand("test");
             if (response.Result == "OK" && response.Message == "OK") return true;
             return false;
@@ -85,8 +98,8 @@ namespace SQLiteCLIENT
                 connection.Send(RAWrequest);
                 RAWresponse = connection.Recv();
                 response = JsonSerializer.Deserialize<Package.Response>(RAWresponse);
-                if (response.Result == resultType[0]) return response;
-                else return null;
+                return response;
+
 
             }
             catch (Exception E)
@@ -94,19 +107,7 @@ namespace SQLiteCLIENT
                 return null;
             }
         }
-        public List<List<string>> formatTable(Package.Response response)
-        {
-            List<List<string>> table = new List<List<string>>();
-            
-
-            foreach (string protoRow in response.Data)
-            {
-                List<string> Row = protoRow.Split(',').ToList<string>();
-                table.Add(Row);
-            }
-
-            return table;
-        }
+        
 
         public  static void getFile(string path,byte[] fileBytes)
         {
@@ -116,44 +117,37 @@ namespace SQLiteCLIENT
             File.WriteAllBytes(path, fileBytes);
 
         }
-
-        public class Package
+        public void LoadDataBases()
         {
-            [Serializable]
-            public class Request
+            dataBases = new Dictionary<string, DataBase>();
+            if (!isLoged) return;
+            string[] databaseNames = GetDBs().Data[0];
+            foreach(string databasename in databaseNames)
             {
-                public String Command { get; set; }
-                public String[] Args { get; set; }
-                public String Hash { get; set; }
+                DataBase dataBase = new DataBase(this);
+                dataBase.Name = databasename;
+                dataBase.LoadTables();
+                dataBases.Add(dataBase.Name,dataBase);
 
             }
-
-            [Serializable]
-            public class Response
+        }
+        public bool addDataBase(DataBase db)
+        {
+            if (db.Name == null || db.Name == "") return false;
+            NewDb(db.Name);
+            foreach(Table table in db.tables.Values)
             {
-                public String Result { get; set; }
-                public String Message { get; set; }
-                public String[] Data { get; set; }
+                db.AddTable(table);
             }
 
-            public Request GenPackage(string command, String[] args, String hash)
-            {
-                Request package = new Request();
-                package.Command = command;
-                package.Args = args;
-                package.Hash = hash;
-                return package;
-            }
-
-            [Serializable]
-            public class Login
-            {
-                public int Type { get; set; }
-                public String version { get; set; }
-                public String User { get; set; }
-                public String Password { get; set; }
-
-            }
+            return true;
+        }
+        public DataBase createDataBase(string name)
+        {
+            DataBase db = new DataBase(this);
+            db.Name = name;
+            dataBases.Add(db.Name,db);
+            return db;
         }
 
     }

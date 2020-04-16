@@ -1,20 +1,21 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\alber\\source\\repos\\SERVQLClient\\ServQLClient\\ServQLClient.csproj": {}
+    "C:\\Users\\alber\\source\\repos\\ServQL Client\\ServQLClient\\ServQLClient.csproj": {}
   },
   "projects": {
-    "C:\\Users\\alber\\source\\repos\\SERVQLClient\\ServQLClient\\ServQLClient.csproj": {
+    "C:\\Users\\alber\\source\\repos\\ServQL Client\\ServQLClient\\ServQLClient.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\alber\\source\\repos\\SERVQLClient\\ServQLClient\\ServQLClient.csproj",
+        "projectUniqueName": "C:\\Users\\alber\\source\\repos\\ServQL Client\\ServQLClient\\ServQLClient.csproj",
         "projectName": "ServQLClient",
-        "projectPath": "C:\\Users\\alber\\source\\repos\\SERVQLClient\\ServQLClient\\ServQLClient.csproj",
+        "projectPath": "C:\\Users\\alber\\source\\repos\\ServQL Client\\ServQLClient\\ServQLClient.csproj",
         "packagesPath": "C:\\Users\\alber\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\alber\\source\\repos\\SERVQLClient\\ServQLClient\\obj\\",
+        "outputPath": "C:\\Users\\alber\\source\\repos\\ServQL Client\\ServQLClient\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\"
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
           "C:\\Users\\alber\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -56,7 +57,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
         }
       }
     }

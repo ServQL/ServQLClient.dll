@@ -2,72 +2,45 @@
 using System.Linq;
 using System.Collections.Generic;
 
-public class Cache
-{
+namespace ServQLClient { 
 
-
-	public class Session
+	public class Cache
 	{
-		Owner owner { get; set; }
-		Dictionary<String,Database> Databases = new Dictionary<string, Database>();
-		public String DataBase ;
 
-
-		void AddDataBase(string dbName)
+		public class Session
 		{
-			if (!Databases.ContainsKey(dbName))
+			Owner owner { get; set; }
+
+			public String DataBase ;
+
+
+
+
+			public Session(string UserName,string Hash)
 			{
-				Database database = new Database()
+
+
+				owner = new Owner(Hash)
 				{
-					owner = owner,
-					Name = dbName
+					Name = UserName
 				};
 
-				Databases.Add(dbName, database);
 			}
-
-
 		}
-
-		Session(int id,string UserName,string Hash)
-		{
-
-
-			owner = new Owner(Hash)
-			{
-				ID = id,
-				Name = UserName
-			};
-
-		}
-	}
 
 		
-	[Serializable]
-	public class Database
-	{
-		public Owner owner { get; set; }
-		public string Name { get; set; }
-		public List<string> Tables { get; set; }
-	}
 
-	[Serializable]
-	public class Table
-	{
-		List<string> Titles { get; set; }
-		List<List<string>> Data { get; set; }
-	}
-
-	[Serializable]
-	public class Owner
-	{
-		public int ID;
-		public string Name;
-		private string Hash;
-
-		public Owner(string _Hash)
+		[Serializable]
+		public class Owner
 		{
-			Hash = _Hash;
+			public int ID;
+			public string Name;
+			private string Hash;
+
+			public Owner(string _Hash)
+			{
+				Hash = _Hash;
+			}
 		}
 	}
 }
