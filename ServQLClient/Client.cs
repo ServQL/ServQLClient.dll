@@ -67,10 +67,12 @@ namespace ServQLClient
             {
                 Package.Response response = sendCommand("list", "");
                 String[][] data = response.Data;
-                for (int i = 0; i < response.Data.Length ;i++)
+
+                for (int i = 0; i < response.Data[0].Length ;i++)
                 {
                     if (response.Data[0][i] == Session.DataBase) data[0][i] = "* " + data[0][i];
                 }
+
                 return response;
             };
 
@@ -135,7 +137,7 @@ namespace ServQLClient
         {
             if (db.Name == null || db.Name == "") return false;
             NewDb(db.Name);
-            foreach(Table table in db.tables.Values)
+            foreach(Table table in db.Tables.Values)
             {
                 db.AddTable(table);
             }

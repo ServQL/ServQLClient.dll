@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 
@@ -9,8 +11,8 @@ namespace ServQLClient
     {
         private Client client;
         public string Name;
-        public Dictionary<String,Table> tables;
-
+        //public Dictionary<String,Table> Tables;
+        public Dictionary<string, Table> Tables;
 
         public void LoadTables()
         {
@@ -23,7 +25,7 @@ namespace ServQLClient
                 table.Name = tableName[0];
                 table.dataBase = this.Name;
                 table.updateData(10);
-                tables.Add(table.Name,table);
+                Tables.Add(table.Name,table);
 
                 
 
@@ -60,7 +62,7 @@ namespace ServQLClient
         public DataBase(Client client)
         {
             this.client = client;
-            tables = new Dictionary<string, Table>();
+            Tables = new Dictionary<string, Table>();
         }
 
     }
