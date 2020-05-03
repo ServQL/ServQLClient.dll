@@ -11,7 +11,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.IO;
 using System.IO.Compression;
-
+using SmazSharp;
 namespace ServQLClient
 {
     
@@ -88,7 +88,8 @@ namespace ServQLClient
             cmd += '\n';
 
             byte[] data = Encoding.UTF8.GetBytes(cmd);
-            byte[] compressedData = Compress(data);
+            //byte[] compressedData = Compress(data);
+            byte[] compressedData = Smaz.Compress(data);
             byte[] realdata = new byte[compressedData.Length + 1];
             realdata[0] = 1;
             compressedData.CopyTo(realdata, 1);
@@ -106,12 +107,15 @@ namespace ServQLClient
             if (dataResult[0] == 1 )
             {
                 dataResult = dataResult.Skip(1).ToArray();
-                result = Encoding.UTF8.GetString(Decompress(dataResult));
+                //result = Encoding.UTF8.GetString(Decompress(dataResult));
+                result = Smaz.Decompress(dataResult);
 
             }
             else
             {
-                result = Encoding.UTF8.GetString(Decompress(dataResult));
+                //result = Encoding.UTF8.GetString(Decompress(dataResult));
+                result = Smaz.Decompress(dataResult);
+
             }
             result = result.TrimEnd('\0');
             result = result.TrimEnd('\n');
