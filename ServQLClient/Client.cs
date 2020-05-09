@@ -15,6 +15,7 @@ namespace ServQLClient
         public bool isLoged { get; set; }
         private Cache.Session Session;
         public Dictionary<String,DataBase> dataBases;
+        public string LastError;
 
         public Package.Response? Login(string user,string password)
         {
@@ -106,6 +107,7 @@ namespace ServQLClient
             }
             catch (Exception E)
             {
+                LastError = E.Message;
                 return null;
             }
         }

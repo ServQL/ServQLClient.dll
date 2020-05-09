@@ -89,39 +89,62 @@ namespace ServQLClient
 
             byte[] data = Encoding.UTF8.GetBytes(cmd);
             //byte[] compressedData = Compress(data);
-            byte[] compressedData = Smaz.Compress(data);
-            byte[] realdata = new byte[compressedData.Length + 1];
+            //byte[] compressedData = Encoding.UTF8.GetBytes(Convert.ToBase64String(data));
+            byte[] realdata = new byte[data.Length + 1];
             realdata[0] = 1;
-            compressedData.CopyTo(realdata, 1);
+            data.CopyTo(realdata, 1);
             stream.Write(realdata,0,realdata.Length);            
         }
        
+
+        //public string Recv()
+        //{
+        //    if (!isReady) throw (new Exception("Connection not Ready"));
+        //    string result = "";
+        //    byte[] dataResult = new byte[client.ReceiveBufferSize];
+        //    stream.Read(dataResult, 0, dataResult.Length);
+        //    stream.Flush();
+        //    if (dataResult[0] == 1 )
+        //    {
+        //        dataResult = dataResult.Skip(1).ToArray();
+        //        //result = Encoding.UTF8.GetString(Decompress(dataResult));
+        //        result = Smaz.Decompress(dataResult);
+
+        //    }
+        //    else
+        //    {
+        //        //result = Encoding.UTF8.GetString(Decompress(dataResult));
+        //        result = Smaz.Decompress(dataResult);
+
+        //    }
+        //    result = result.TrimEnd('\0');
+        //    result = result.TrimEnd('\n');
+        //    return result;
+
+        //}
 
         public string Recv()
         {
             if (!isReady) throw (new Exception("Connection not Ready"));
             string result = "";
-            byte[] dataResult = new byte[client.ReceiveBufferSize];
-            stream.Read(dataResult, 0, dataResult.Length);
-            stream.Flush();
-            if (dataResult[0] == 1 )
+            string recived;
+            byte[] dataResult;
+            do
             {
-                dataResult = dataResult.Skip(1).ToArray();
-                //result = Encoding.UTF8.GetString(Decompress(dataResult));
-                result = Smaz.Decompress(dataResult);
+                dataResult = new byte[10100];
+                stream.Read(dataResult, 0, dataResult.Length);
+                if (dataResult[0] == 1)
+                {
+                    dataResult = dataResult.Skip(1).ToArray();
+                }
+                result += Encoding.UTF8.GetString(dataResult).Replace("\0", "");
+               // result += Encoding.UTF8.GetString(Convert.FromBase64String(recived));
 
-            }
-            else
-            {
-                //result = Encoding.UTF8.GetString(Decompress(dataResult));
-                result = Smaz.Decompress(dataResult);
+            } while (dataResult[9999] != 0);
 
-            }
-            result = result.TrimEnd('\0');
-            result = result.TrimEnd('\n');
             return result;
-
         }
+
 
         public byte[] Compress(byte[] buffer)
         {
