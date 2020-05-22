@@ -13,7 +13,7 @@ namespace ServQLClient
         Connection connection { get; set; }
         string[] resultType = { "OK", "ERROR", "FILE" };
         public bool isLoged { get; set; }
-        private Cache.Session Session;
+        private Cache Session;
         public Dictionary<String,DataBase> dataBases;
         public string LastError;
 
@@ -25,12 +25,17 @@ namespace ServQLClient
                 loginPackage.User = user;
                 loginPackage.Password = password;
                 connection.Send(JsonSerializer.Serialize(loginPackage));
-                
-                Package.Response response = JsonSerializer.Deserialize<Package.Response>(connection.Recv());
+                Package.Response response = new Package.Response();
+                try
+                {
+                   response = JsonSerializer.Deserialize<Package.Response>(connection.Recv());
+                } catch (Exception E){
+                    return null;
+                }
                 if (response.Result == resultType[0])
                 {
                     isLoged = true;
-                    Session = new Cache.Session(user,"");
+                    Session = new Cache(user,"");
                 }
                 return response;
             }

@@ -6,41 +6,28 @@ namespace ServQLClient {
 
 	public class Cache
 	{
+		private List<String> cacheStorage { get; set; }
+		private string key { get; set; }
+		public string DataBase { get; internal set; }
 
-		public class Session
+		public void AddCache(DataBase dataBase) { }
+		public void AddCache(Table table) {
+			AddCache(table.dataBase, table.Data.ToList());
+		}
+		public void AddCache(string tableName,string[][] data) { 
+			
+		}
+		public void AddCache(string tableName, List<List<String>> data)
 		{
-			Owner owner { get; set; }
 
-			public String DataBase ;
-
-
-
-
-			public Session(string UserName,string Hash)
-			{
-
-
-				owner = new Owner(Hash)
-				{
-					Name = UserName
-				};
-
-			}
 		}
 
-		
 
-		[Serializable]
-		public class Owner
+
+		public Cache(string user,string password)
 		{
-			public int ID;
-			public string Name;
-			private string Hash;
 
-			public Owner(string _Hash)
-			{
-				Hash = _Hash;
-			}
 		}
+
 	}
 }

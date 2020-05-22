@@ -19,10 +19,11 @@ namespace ServQLClient
     {
         public string ip { get; set; }
         public int Port = 124;
-        public string clientVersion = "0.30b";
+        public string clientVersion = "0.50b";
         TcpClient client { get; set; }
         public SslStream stream { get; set; }
         public bool isReady = false;
+        private Exception HostUnrecheableException = new Exception("the host is unreachable");
 
         string version { get; set; }
 
@@ -33,8 +34,8 @@ namespace ServQLClient
 
         public TcpClient Open()
         {
-            TcpClient client = new TcpClient(this.ip, this.Port);
-            this.client = client;
+            client = new TcpClient(this.ip, this.Port);
+      
             stream = new SslStream(client.GetStream(),false,new RemoteCertificateValidationCallback(ValidateServerCertificate),null);
             stream.AuthenticateAsClient(ip);
             this.isReady = true;
@@ -146,45 +147,45 @@ namespace ServQLClient
         }
 
 
-        public byte[] Compress(byte[] buffer)
-        {
-            MemoryStream ms = new MemoryStream();
-            using (GZipStream zip = new GZipStream(ms, CompressionMode.Compress, true))
-            {
-                zip.Write(buffer, 0, buffer.Length);
-            }
-            ms.Position = 0;
-            MemoryStream outStream = new MemoryStream();
-            byte[] compressed = new byte[ms.Length];
-            ms.Read(compressed, 0, compressed.Length);
-            byte[] gzBuffer = new byte[compressed.Length + 4];
-            System.Buffer.BlockCopy(compressed, 0, gzBuffer, 4, compressed.Length);
-            System.Buffer.BlockCopy(BitConverter.GetBytes(buffer.Length), 0, gzBuffer, 0, 4);
-            return gzBuffer;
+        //public byte[] Compress(byte[] buffer)
+        //{
+        //    MemoryStream ms = new MemoryStream();
+        //    using (GZipStream zip = new GZipStream(ms, CompressionMode.Compress, true))
+        //    {
+        //        zip.Write(buffer, 0, buffer.Length);
+        //    }
+        //    ms.Position = 0;
+        //    MemoryStream outStream = new MemoryStream();
+        //    byte[] compressed = new byte[ms.Length];
+        //    ms.Read(compressed, 0, compressed.Length);
+        //    byte[] gzBuffer = new byte[compressed.Length + 4];
+        //    System.Buffer.BlockCopy(compressed, 0, gzBuffer, 4, compressed.Length);
+        //    System.Buffer.BlockCopy(BitConverter.GetBytes(buffer.Length), 0, gzBuffer, 0, 4);
+        //    return gzBuffer;
 
 
-        }
+        //}
 
 
-        public byte[] Decompress(byte[] gzBuffer)
-        {
+        //public byte[] Decompress(byte[] gzBuffer)
+        //{
 
-            using (MemoryStream ms = new MemoryStream())
-            {
-                int msgLength = BitConverter.ToInt32(gzBuffer, 0);
-                ms.Write(gzBuffer, 4, gzBuffer.Length - 4);
+        //    using (MemoryStream ms = new MemoryStream())
+        //    {
+        //        int msgLength = BitConverter.ToInt32(gzBuffer, 0);
+        //        ms.Write(gzBuffer, 4, gzBuffer.Length - 4);
 
-                byte[] buffer = new byte[msgLength];
+        //        byte[] buffer = new byte[msgLength];
 
-                ms.Position = 0;
-                using (GZipStream zip = new GZipStream(ms, CompressionMode.Decompress))
-                {
-                    zip.Read(buffer, 0, buffer.Length);
-                }
+        //        ms.Position = 0;
+        //        using (GZipStream zip = new GZipStream(ms, CompressionMode.Decompress))
+        //        {
+        //            zip.Read(buffer, 0, buffer.Length);
+        //        }
 
-                return buffer;
-            }
-        }
+        //        return buffer;
+        //    }
+        //}
 
     }
 
